@@ -72,10 +72,10 @@ import { Category, Place } from '../../core/models/place.model';
                 <button class="clear-point" (click)="fromPlace.set(null)">✕</button>
               </div>
             } @else {
-              <button class="gps-point" (click)="useGpsFrom()">
-                📍 Менің орным (GPS)
-              </button>
-              <div class="divider-or">немесе тізімнен таңда</div>
+              <div class="gps-point active-gps">
+                📍 Менің орным (GPS) — авто
+              </div>
+              <div class="divider-or">немесе төменде А басыңыз</div>
             }
           </div>
 
@@ -95,7 +95,7 @@ import { Category, Place } from '../../core/models/place.model';
           <!-- Маршрут батырмасы -->
           <button
             class="btn-draw-route"
-            [disabled]="!toPlace() && !fromPlace()"
+            [disabled]="!toPlace()"
             (click)="emitRoute()"
           >
             🗺️ Маршрут сыз

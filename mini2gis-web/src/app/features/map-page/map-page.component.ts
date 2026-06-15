@@ -60,8 +60,10 @@ import { environment } from '../../../environments/environment';
         <div class="overlay-card">
           <app-place-card
             [place]="selectedPlace()!"
+            [routeInfo]="routeInfo()"
             (close)="closeCard()"
-            (openRoute)="openRoutePanel($event)"
+            (openRoute)="drawDirectRoute($event)"
+            (clearRoute)="clearDirectRoute()"
           />
         </div>
       }
@@ -174,11 +176,14 @@ export class MapPageComponent implements OnInit {
     this.mapRef?.clearRoute();
   }
 
-  openRoutePanel(place: Place) {
-    this.selectedPlace.set(place);
+  drawDirectRoute(place: Place) {
+    this.routeInfo.set(null);
+    this.mapRef?.drawRoute(place);
+  }
+
+  clearDirectRoute() {
     this.routeInfo.set(null);
     this.mapRef?.clearRoute();
-    this.showRoutePanel.set(true);
   }
 
   closeRoutePanel() {

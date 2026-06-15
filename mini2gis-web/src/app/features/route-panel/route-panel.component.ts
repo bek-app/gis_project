@@ -267,15 +267,35 @@ export class RoutePanelComponent implements OnChanges {
 
   async go() {
     this.error.set('');
+    this.loading.set(true);
 
     let from = this.fromCoords;
-    let fromLabel = this.fromText || 'Қайдан';
+    let fromLabel = this.fromText || 'Менің орным';
 
+    // FROM бос болса — GPS автоматты
     if (!from && this.fromText.trim()) {
       const results = await firstValueFrom(this.api.geocode(this.fromText));
       if (results.length) {
         from = L.latLng(+results[0].lat, +results[0].lon);
         fromLabel = results[0].display_name.split(',')[0];
+      }
+    }
+
+    if (!from) {
+      try {
+        from = await new Promise<L.LatLng>((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(
+            pos => resolve(L.latLng(pos.coords.latitude, pos.coords.longitude)),
+            reject,
+            { enableHighAccuracy: true, timeout: 8000 },
+          );
+        });
+        fromLabel = 'Менің орным 📍';
+        this.fromText = fromLabel;
+      } catch {
+        this.error.set('Геолокация рұқсаты жоқ. Қайдан орнын қолмен енгізіңіз.');
+        this.loading.set(false);
+        return;
       }
     }
 
@@ -287,7 +307,7 @@ export class RoutePanelComponent implements OnChanges {
       }
     }
 
-    if (!from) { this.error.set('"Қайдан" орнын таңдаңыз немесе GPS қолданыңыз'); return; }
+    this.loading.set(false);
     if (!to) { this.error.set('"Қайда" орнын таңдаңыз'); return; }
 
     this.routeRequested.emit({ from, to, fromLabel });
