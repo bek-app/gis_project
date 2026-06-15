@@ -8,7 +8,9 @@
 
 const { Client } = require('pg');
 
-const DB = {
+const DATABASE_URL = process.env.DATABASE_URL || null;
+
+const DB = DATABASE_URL ? { connectionString: DATABASE_URL, ssl: { rejectUnauthorized: false } } : {
   host: 'localhost',
   port: 5432,
   database: 'mini2gis',
