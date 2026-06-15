@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
-const API = 'http://localhost:3000';
+const API = environment.apiUrl;
 const TOKEN_KEY = 'mg_token';
 const ROLE_KEY = 'mg_role';
 const EMAIL_KEY = 'mg_email';

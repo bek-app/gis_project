@@ -4,4 +4,3 @@ dist/
 *.log
 .env
 .DS_Store
-mini2gis-web/src/environments/
