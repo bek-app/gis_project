@@ -1,5 +1,8 @@
 *, *::before, *::after { box-sizing: border-box; }
 
+/* Leaflet-routing-machine бағыт нұсқаулар панелін жасыру */
+.leaflet-routing-container { display: none !important; }
+
 html, body {
   margin: 0;
   padding: 0;

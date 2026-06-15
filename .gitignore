@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.angular/
+*.log
+.env
+.DS_Store
+mini2gis-web/src/environments/

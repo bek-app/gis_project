@@ -4,6 +4,16 @@ import { Category, Place } from '../models/place.model';
 
 const API = 'http://localhost:3000';
 
+export interface PlacePayload {
+  name: string;
+  lat: number;
+  lng: number;
+  address?: string;
+  phone?: string;
+  opening_hours?: string;
+  categoryId?: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   constructor(private http: HttpClient) {}
@@ -22,8 +32,33 @@ export class ApiService {
     return this.http.get<Place>(`${API}/places/${id}`);
   }
 
-  searchPlaces(query: string, bbox: [number, number, number, number]) {
-    let params = new HttpParams().set('bbox', bbox.join(',')).set('q', query);
+  searchPlaces(q: string, bbox: [number, number, number, number]) {
+    const params = new HttpParams().set('bbox', bbox.join(',')).set('q', q);
     return this.http.get<Place[]>(`${API}/places/search`, { params });
+  }
+
+  createPlace(payload: PlacePayload) {
+    return this.http.post<Place>(`${API}/places`, payload);
+  }
+
+  updatePlace(id: number, payload: Partial<PlacePayload>) {
+    return this.http.put<Place>(`${API}/places/${id}`, payload);
+  }
+
+  deletePlace(id: number) {
+    return this.http.delete(`${API}/places/${id}`);
+  }
+
+  geocode(query: string) {
+    const params = new HttpParams()
+      .set('q', `${query}, Астана, Қазақстан`)
+      .set('format', 'json')
+      .set('limit', '5')
+      .set('bounded', '1')
+      .set('viewbox', '71.0,51.5,72.2,51.0');
+    return this.http.get<{ lat: string; lon: string; display_name: string }[]>(
+      'https://nominatim.openstreetmap.org/search',
+      { params, headers: { 'Accept-Language': 'ru,kk' } },
+    );
   }
 }

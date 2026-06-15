@@ -15,4 +15,5 @@ export interface Place {
   lng: number;
   category?: Category;
   osm_id?: string;
+  source?: string;
 }
