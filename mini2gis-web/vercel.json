@@ -1,4 +1,6 @@
 {
+  "buildCommand": "npm install && npx ng build",
+  "outputDirectory": "dist/mini2gis-web/browser",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
