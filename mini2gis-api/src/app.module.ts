@@ -25,6 +25,7 @@ import { UsersModule } from './users/users.module';
           autoLoadEntities: true,
           synchronize: true,
           ssl: isProduction ? { rejectUnauthorized: false } : false,
+          extra: isProduction ? { family: 4 } : {},
         };
       },
     }),
