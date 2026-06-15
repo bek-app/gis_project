@@ -15,6 +15,14 @@ export class PlacesController {
     return this.svc.findByBbox({ minLat, maxLat, minLng, maxLng, category });
   }
 
+  @Get('search')
+  @ApiQuery({ name: 'q', required: true })
+  @ApiQuery({ name: 'bbox', description: 'minLng,minLat,maxLng,maxLat', required: true })
+  search(@Query('q') q: string, @Query('bbox') bbox: string) {
+    const parts = bbox.split(',').map(Number) as [number, number, number, number];
+    return this.svc.search(q, parts);
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const place = await this.svc.findOne(+id);

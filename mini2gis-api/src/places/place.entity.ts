@@ -32,7 +32,7 @@ export class Place {
   @Index()
   lng: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, unique: true })
   osm_id: string;
 
   @Column({ default: 'osm' })
