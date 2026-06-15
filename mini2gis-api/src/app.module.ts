@@ -13,16 +13,20 @@ import { UsersModule } from './users/users.module';
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (cfg: ConfigService) => ({
-        type: 'postgres',
-        host: cfg.get('DB_HOST', 'localhost'),
-        port: cfg.get<number>('DB_PORT', 5432),
-        username: cfg.get('DB_USERNAME'),
-        password: cfg.get('DB_PASSWORD', ''),
-        database: cfg.get('DB_DATABASE', 'mini2gis'),
-        autoLoadEntities: true,
-        synchronize: true,
-      }),
+      useFactory: (cfg: ConfigService) => {
+        const isProduction = cfg.get('NODE_ENV') === 'production';
+        return {
+          type: 'postgres',
+          host: cfg.get('DB_HOST', 'localhost'),
+          port: cfg.get<number>('DB_PORT', 5432),
+          username: cfg.get('DB_USERNAME'),
+          password: cfg.get('DB_PASSWORD', ''),
+          database: cfg.get('DB_DATABASE', 'mini2gis'),
+          autoLoadEntities: true,
+          synchronize: true,
+          ssl: isProduction ? { rejectUnauthorized: false } : false,
+        };
+      },
     }),
     UsersModule,
     AuthModule,
