@@ -14,7 +14,16 @@ import { UsersModule } from './users/users.module';
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (cfg: ConfigService) => {
-        const isProduction = cfg.get('NODE_ENV') === 'production';
+        const databaseUrl = cfg.get('DATABASE_URL');
+        if (databaseUrl) {
+          return {
+            type: 'postgres',
+            url: databaseUrl,
+            autoLoadEntities: true,
+            synchronize: true,
+            ssl: { rejectUnauthorized: false },
+          };
+        }
         return {
           type: 'postgres',
           host: cfg.get('DB_HOST', 'localhost'),
@@ -24,8 +33,6 @@ import { UsersModule } from './users/users.module';
           database: cfg.get('DB_DATABASE', 'mini2gis'),
           autoLoadEntities: true,
           synchronize: true,
-          ssl: isProduction ? { rejectUnauthorized: false } : false,
-          extra: isProduction ? { family: 4 } : {},
         };
       },
     }),
